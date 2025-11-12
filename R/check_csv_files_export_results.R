@@ -20,7 +20,8 @@
 # sapply(files.sources, source)
 
 check_csv_folder_export <- function(uploaded_files,
-                                    wacky_chars_check = FALSE
+                                    wacky_chars_check = FALSE,
+                                    allowed_chars = "[^a-zA-Z0-9\\p{Z}\n\r.,;:'()<>_/£$%&+\\*\"\\\\-]"
                                     # progress_callback = function(msg) { # function to update progress message
                                     #   cat(msg, "\n") }
 ) {

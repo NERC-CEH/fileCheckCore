@@ -6,7 +6,7 @@
 #'
 #' @param raw_content_df A data frame to check. Each cell is treated as a character string.
 #' @param regexp_str A regular expression defining disallowed characters. Defaults to a pattern
-#'        that allows letters, numbers, spaces, and common punctuation (e.g., `.,;:'()<>_/£$%&+*"-`).
+#'        that allows letters, numbers, spaces, and common punctuation (e.g., `.,;:'()<>_/£$%&+*"-`). allowed_chars passed in to check_csv_folder_export function
 #' @return A single character string listing all flagged cells, or an empty string if none found.
 #' @importFrom stringi stri_trans_nfkc
 #' @export
@@ -14,7 +14,7 @@
 
 
 # Define function to identify non-alphanumeric characters -  add any allowed characters to  allowed_chars
-identify_non_alphanumeric_characters_df <- function(raw_content_df, regexp_str = "[^a-zA-Z0-9\\p{Z}\n\r.,;:'()<>_/£$%&+\\*\"\\\\-]") {
+identify_non_alphanumeric_characters_df <- function(raw_content_df, regexp_str = allowed_chars) {
 
   # Convert each column to character, normalize Unicode, and trim spaces in one vectorized pass
   data_cleaned <- as.data.frame(lapply(raw_content_df, function(col) {
