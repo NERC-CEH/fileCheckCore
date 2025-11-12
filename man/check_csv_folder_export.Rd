@@ -7,7 +7,8 @@
 check_csv_folder_export(uploaded_files, wacky_chars_check = FALSE)
 }
 \arguments{
-\item{uploaded_files}{a list of data files to be checked}
+\item{uploaded_files}{a data frame of data files to be checked with 2 columns:
+"name" (containing file name and extension) and "datapath" (containing full file path)}
 
 \item{wacky_chars_check}{a boolean TRUE/FALSE
 #' @return A list with two elements:

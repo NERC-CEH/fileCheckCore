@@ -5,6 +5,7 @@
 #'
 #' @param col_index A positive integer representing the column index.
 #' @return A character string representing the Excel column letter(s)
+#' @export
 #' @keywords internal
 
 
@@ -29,6 +30,7 @@ excel_col_letter <- function(col_index) {
 #' Helper function to choose a random spinner to show while code is executing. No input arguments.
 #'
 #' @return Called for its side effect (displays a spinner). Returns `NULL` invisibly.
+#' @export
 #' @import waiter
 #' @keywords internal
 

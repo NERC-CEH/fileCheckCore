@@ -1,7 +1,8 @@
 #' Main function to call all csv file checks.
 #'
 #'
-#' @param uploaded_files a list of data files to be checked
+#' @param uploaded_files a data frame of data files to be checked with 2 columns:
+#' "name" (containing file name and extension) and "datapath" (containing full file path)
 #' @param wacky_chars_check a boolean TRUE/FALSE
 #' #' @return A list with two elements:
 #' \describe{
