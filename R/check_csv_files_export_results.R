@@ -139,7 +139,7 @@ check_csv_folder_export <- function(uploaded_files,
         # Identify non-alphanumeric characters
         if (wacky_chars_check == TRUE) {
           raw_content_list <- read_csv_raw(file_path)
-          flagged_characters <- identify_bad_chars_fast(file_path, raw_content_list, regexp_str = allowed_chars)
+          flagged_characters <- identify_bad_chars_fast(file_path, raw_content_list, allowed_chars = allowed_chars)
         } else {
           flagged_characters = "Not checked"
         }

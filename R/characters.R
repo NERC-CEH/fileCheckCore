@@ -5,8 +5,8 @@
 #' summarizing all problematic cells with their spreadsheet-style cell references (e.g., A2, B3).
 #'
 #' @param raw_content_df A data frame to check. Each cell is treated as a character string.
-#' @param regexp_str A regular expression defining disallowed characters. Defaults to a pattern
-#'        that allows letters, numbers, spaces, and common punctuation (e.g., `.,;:'()<>_/£$%&+*"-`). allowed_chars passed in to check_csv_folder_export function
+#' @param allowed_chars A regular expression defining disallowed characters. Defaults to a pattern
+#'        that allows letters, numbers, spaces, and common punctuation (e.g., `.,;:'()<>_/£$%&+*"-`). allowed_chars passed in to check_csv_folder_export
 #' @return A single character string listing all flagged cells, or an empty string if none found.
 #' @importFrom stringi stri_trans_nfkc
 #' @export
@@ -14,7 +14,7 @@
 
 
 # Define function to identify non-alphanumeric characters -  add any allowed characters to  allowed_chars
-identify_non_alphanumeric_characters_df <- function(raw_content_df, regexp_str = allowed_chars) {
+identify_non_alphanumeric_characters_df <- function(raw_content_df, allowed_chars = "[^a-zA-Z0-9\\p{Z}\n\r.,;:'()<>_/£$%&+\\*\"\\\\-]") {
 
   # Convert each column to character, normalize Unicode, and trim spaces in one vectorized pass
   data_cleaned <- as.data.frame(lapply(raw_content_df, function(col) {
@@ -25,7 +25,7 @@ identify_non_alphanumeric_characters_df <- function(raw_content_df, regexp_str =
   results <- lapply(seq_along(data_cleaned), function(col_idx) {
     col_data <- data_cleaned[[col_idx]]
     # Find indices where cell is non-empty and contains at least one disallowed character
-    bad_indices <- which(nchar(col_data) > 0 & grepl(regexp_str, col_data, perl = TRUE))
+    bad_indices <- which(nchar(col_data) > 0 & grepl(allowed_chars, col_data, perl = TRUE))
 
     if (length(bad_indices) > 0) {
       # Create cell references (e.g., A1, B3, etc.) and build the flagged cell string
@@ -46,7 +46,7 @@ identify_non_alphanumeric_characters_df <- function(raw_content_df, regexp_str =
 
 
 # scan the entire file as a raw string first and flag characters before checking positions later
-identify_bad_chars_fast <- function(file_path, raw_content_list, regexp_str = allowed_chars) {
+identify_bad_chars_fast <- function(file_path, raw_content_list, allowed_chars = "[^a-zA-Z0-9\\p{Z}\n\r.,;:'()<>_/£$%&+\\*\"\\\\-]") {
 
 
    # # Read file as a single string
@@ -57,20 +57,20 @@ identify_bad_chars_fast <- function(file_path, raw_content_list, regexp_str = al
 
 
   # Check if any bad characters exist
-  if (!grepl(regexp_str, raw_content, perl = TRUE)) {
+  if (!grepl(allowed_chars, raw_content, perl = TRUE)) {
     # print("No wacky characters found!")
     return("")  # No bad characters found
   } else {
     # print("Wacky characters found so we'll do the slower check")
 
     # Debugging: See what characters are being detected
-    bad_chars <- regmatches(raw_content, gregexpr(regexp_str, raw_content, perl = TRUE))
+    bad_chars <- regmatches(raw_content, gregexpr(allowed_chars, raw_content, perl = TRUE))
     # print("Characters triggering detection:")
     # print(unique(unlist(bad_chars)))
 
     # If bad characters exist, fall back to slower cell-by-cell checking
     raw_content_df <- raw_content_list$raw_content_df
 
-    return(identify_non_alphanumeric_characters_df(raw_content_df, regexp_str = allowed_chars))
+    return(identify_non_alphanumeric_characters_df(raw_content_df, allowed_chars = "[^a-zA-Z0-9\\p{Z}\n\r.,;:'()<>_/£$%&+\\*\"\\\\-]"))
   }
 }
